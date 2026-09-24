@@ -14,6 +14,8 @@ on, every quotation is matched against that provision before it is shown in quot
 everything that could not be established appears under **Not verified** — in the same column, in
 the same type, as part of the answer rather than a disclaimer at the bottom.
 
+**Two-minute demo:** https://youtu.be/YUXNp8mObfk
+
 ```bash
 ./run.sh                 # http://localhost:8000
 ```

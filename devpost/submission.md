@@ -84,6 +84,7 @@ the narration. Planned with the Devpost Learn skill pack; `devpost/scope.md`, `p
 
 ## Try it out
 
+- Demo video: https://youtu.be/YUXNp8mObfk
 - Repository: https://github.com/bisale24-ops/chapter-and-verse
 - `./run.sh` and open http://localhost:8000 — no install step
 - Results against the pre-build baseline: `evals/RESULTS.md`
