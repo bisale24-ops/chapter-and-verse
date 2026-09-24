@@ -13,7 +13,7 @@ list of things it could not verify.
 ## The problem it is built against
 
 Ask any assistant whether overtime is owed and it will answer, fluently, with a citation that
-looks right. Measured on the questions in  before this project existed: with no
+looks right. Measured on the questions in `data/evals.json` before this project existed: with no
 sources, sixteen of twenty-six answers quoted words that are in no provision, and one answer in
 twenty-six survived grading. A person who is owed money cannot tell the difference between a real
 citation and a well-formed one, and neither can their employer.

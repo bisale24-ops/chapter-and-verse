@@ -33,9 +33,9 @@ of the shift.
 ## The problem
 
 Ask any assistant whether overtime is owed and it answers fluently, with a citation that looks
-right. Before writing a line of this project I measured that: on 26 questions with no sources,
-the model quoted words that exist in no source in 16 of its answers, and one answer in twenty-six
-survived grading. The worst of them described a recordkeeping rule under 29 CFR § 531.7 and
+right. Before writing a line of this project I measured that on the 26 questions in the
+repository: with no sources, the model quoted words that exist in no source in 16 of its answers,
+and one answer in twenty-six survived grading. The worst of them described a recordkeeping rule under 29 CFR § 531.7 and
 quoted it — that section is marked [Reserved] and has no text at all.
 
 Someone who is owed money cannot tell a real citation from a well-formed one.

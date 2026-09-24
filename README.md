@@ -3,10 +3,10 @@
 A labour-pay assistant that answers only what it can trace to a source, and shows you the rest.
 
 Ask whether overtime is owed and most assistants will answer fluently, with a citation that
-looks right. Put the twenty-six questions in  to the bare model with no sources and it
+looks right. Put the twenty-six questions in `evals/` to the bare model with no sources and it
 quotes words that exist in no provision in sixteen of its answers; one answer out of twenty-six
-survives grading. The worst of them describes a recordkeeping rule under 29 CFR 531.7 and
-quotes it - that section is marked [Reserved] and has no text at all. Someone who is owed money
+survives grading. The worst of them describes a recordkeeping rule under 29 CFR § 531.7 and
+quotes it — that section is marked [Reserved] and has no text at all. Someone who is owed money
 cannot tell a real citation from a well-formed one.
 
 So this tool does something narrower and more useful: every claim carries the provision it rests
