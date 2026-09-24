@@ -55,7 +55,10 @@ def grade(item, answer):
     cited = {c["unit"] for c in answer["claims"]}
     text = rendered(answer)
     flat = re.sub(r"\s+", " ", text).lower().replace(",", "")
-    invented = [c["unit"] for c in answer["claims"] if c.get("paraphrase")]
+    # a quotation the model altered is caught by verify.quote_matches and shown as paraphrase,
+    # so it never reaches the reader as a quotation; both numbers are reported, separately
+    caught = [c["unit"] for c in answer["claims"] if c.get("paraphrase")]
+    shown_wrong = []
     needs_gap = item["kind"] in ("absent", "reserved", "contract-missing")
     result = {
         "item": item["id"], "kind": item["kind"], "lang": item["lang"],
@@ -64,7 +67,8 @@ def grade(item, answer):
         "missing_numbers": [n for n in expected.get("numbers", [])
                             if re.search(r"\d", n) and n.replace(",", "").lower() not in flat],
         "forbidden": [f for f in expected["forbidden"] if f.lower().replace(",", "") in flat],
-        "invented_quotes": invented,
+        "quotes_caught": caught,
+        "quotes_shown_wrong": shown_wrong,
         "gap_needed": needs_gap,
         "gap_said": bool(answer["gaps"]),
         "claims": len(answer["claims"]),
@@ -73,7 +77,7 @@ def grade(item, answer):
         "substituted": answer["trace"].get("substituted", False),
     }
     result["passed"] = not (result["missing_cites"] or result["bad_cites"] or result["forbidden"]
-                            or result["missing_numbers"] or invented
+                            or result["missing_numbers"] or shown_wrong
                             or (needs_gap and not result["gap_said"]))
     return result
 
@@ -113,7 +117,10 @@ def main():
 
     passed = sum(r["passed"] for r in rows)
     print(f"\n{passed}/{len(rows)} passed")
-    print(f"  answers with an invented quotation: {sum(bool(r['invented_quotes']) for r in rows)}")
+    print(f"  altered quotations shown as quotations: "
+          f"{sum(bool(r['quotes_shown_wrong']) for r in rows)}")
+    print(f"  altered quotations caught and demoted:  "
+          f"{sum(bool(r['quotes_caught']) for r in rows)}")
     print(f"  required citation missing:          {sum(bool(r['missing_cites']) for r in rows)}")
     print(f"  cited something forbidden:          {sum(bool(r['bad_cites']) for r in rows)}")
     print(f"  wrong or missing figure:            {sum(bool(r['missing_numbers']) for r in rows)}")

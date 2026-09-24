@@ -11,9 +11,9 @@ import pathlib
 from . import corpus, hours, model, plan, retrieve, verify
 
 DATA = pathlib.Path(__file__).resolve().parents[2] / "data"
-CONTEXT_UNITS = 30        # what the answering pass sees; recall beats precision at this size
-RERANK_KEEP = 10          # how many of those the reranker put first, and get their full text
-POOL = 80                 # how wide the lexical shortlist is before the reranker sees it
+CONTEXT_UNITS = 14        # what the answering pass sees; recall beats precision at this size
+RERANK_KEEP = 8           # how many of those the reranker put first, and get their full text
+POOL = 60                 # how wide the lexical shortlist is before the reranker sees it
 FULL_TEXT = 6000
 SHORT_TEXT = 1200
 
@@ -77,20 +77,26 @@ def render_facts(facts):
 
 
 def ask(question, jurisdictions=("us-federal", "us-ca"), on_date=None, documents=None,
-        language="en", model_name=model.DEFAULT_MODEL, units=None):
+        language="en", model_name=model.DEFAULT_MODEL, units=None, rerank=False):
     on_date = on_date or datetime.date.today()
     units = units if units is not None else corpus.load()
     available = corpus.select(units, jurisdictions, on_date)
     idx = retrieve.index(available)
     planned, plan_reply = plan.phrases(question, model_name=model_name)
     pool = plan.gather(idx, question, planned, units=units, pool=POOL,
-                       per_container=4, per_phrase=8)
-    found, rerank_reply = plan.rerank(pool, question, keep=RERANK_KEEP, model_name=model_name)
-    for unit in pool:                                   # recall matters more than precision here:
-        if len(found) >= CONTEXT_UNITS:                 # the shortlist is ordered, then filled out
-            break
-        if unit not in found:
-            found.append(unit)
+                       per_container=3, per_phrase=6)
+    # The reranker is off by default and the measurement is why: asked to choose from sixty
+    # titles it dropped § 785.18 - "Rest" - from second place for a question about a coffee
+    # break, and the answer became a refusal. The lexical order, phrase hits first, does better.
+    if rerank:
+        found, _ = plan.rerank(pool, question, keep=RERANK_KEEP, model_name=model_name)
+        for unit in pool:
+            if len(found) >= CONTEXT_UNITS:
+                break
+            if unit not in found:
+                found.append(unit)
+    else:
+        found = pool[:CONTEXT_UNITS]
 
     parts = [question]
     facts = None

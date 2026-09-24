@@ -52,9 +52,14 @@ def named_units(question, units):
     return named
 
 
-def gather(idx, question, planned, units=None, pool=40, per_container=2, per_phrase=5):
-    """The shortlist: provisions named outright, then a spread across the parts of the law,
-    then the planned searches, then whatever the plain search ranks next."""
+def gather(idx, question, planned, units=None, pool=60, per_container=3, per_phrase=6):
+    """The shortlist, in the order that matters when it is later cut short.
+
+    Provisions the question names outright come first, then the planned searches taken
+    round-robin so every matter the question raises is represented before any one of them is
+    represented twice, then the plain search, then a spread across the parts of the law so one
+    regulation cannot crowd out the rest.
+    """
     chosen, seen = [], set()
 
     def take(unit):
@@ -67,16 +72,25 @@ def gather(idx, question, planned, units=None, pool=40, per_container=2, per_phr
         if unit["id"] in available:
             take(unit)
 
+    per_phrase_hits = [retrieve.search(idx, phrase, limit=per_phrase) for phrase in planned]
+    for rank in range(per_phrase):
+        for hits in per_phrase_hits:
+            if rank < len(hits):
+                take(hits[rank])
+
     ranked = retrieve.search(idx, question, limit=len(idx["units"]))
+    for unit in ranked[:6]:
+        take(unit)
+
     per = {}
-    for unit in ranked:                                   # a spread across parts, so that one
-        container = unit.get("container", "")             # regulation cannot fill the shortlist
+    for unit in ranked:
+        container = unit.get("container", "")
         if per.get(container, 0) < per_container:
             per[container] = per.get(container, 0) + 1
             take(unit)
-    for phrase in planned:
-        for unit in retrieve.search(idx, phrase, limit=per_phrase):
-            take(unit)
+        if len(chosen) >= pool:
+            break
+
     for unit in ranked:
         if len(chosen) >= pool:
             break
