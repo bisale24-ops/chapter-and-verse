@@ -1,0 +1,13 @@
+# Synthetic timesheet for testing. Employer: Harbor Line Logistics LLC (Stockton, CA)
+# Employee: R. Calderon, Warehouse Operator, hourly
+# Base rate: 20.00 USD/hour
+# Workweek: Monday 2026-09-07 through Sunday 2026-09-13
+# Exported from: GateClock 4.2, 2026-09-15 08:12 PT
+date,weekday,clock_in,clock_out,meal_start,meal_end,notes
+2026-09-07,Mon,07:00,17:30,12:00,12:30,
+2026-09-08,Tue,07:00,17:30,,,"no meal recorded - line short-staffed"
+2026-09-09,Wed,07:00,17:30,12:15,12:45,
+2026-09-10,Thu,07:00,17:30,12:00,12:30,
+2026-09-11,Fri,07:00,20:30,,,"asked to cover evening inbound; no meal recorded"
+2026-09-12,Sat,07:00,12:00,,,"short shift, under 6 hours"
+2026-09-13,Sun,07:00,17:30,12:00,12:30,"seventh day worked this week"

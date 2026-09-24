@@ -1,0 +1,7 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "chapterverse", "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "chapterverse.server"], "port": 8000 }
+  ]
+}

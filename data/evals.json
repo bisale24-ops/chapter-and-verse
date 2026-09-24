@@ -1,0 +1,748 @@
+{
+ "about": "Reference questions for the Open Agent build. Every expected answer was read out of the corpus files in this folder, not from memory; unit ids match corpus_us.json / corpus_kg.json. 'kind' says what the item tests: grounded = the answer is in one place; conflict = two levels of law give different results; version = the right text depends on the date; reserved/absent/contract-missing = the honest answer is that the corpus does not say. Revised 24.09.2026: on the two 'absent' items the other jurisdiction's provision was moved out of must_not_cite, because naming it as a contrast is legitimate - what must not happen is attributing it to the jurisdiction asked about, which the forbidden phrases catch. The pre-build baseline was re-graded under the same rule.",
+ "as_of": "2026-09-24",
+ "scoring": "An answer passes only if it (1) states the expected result, (2) cites every id in must_cite, (3) cites nothing from must_not_cite, (4) raises every point in must_flag, and (5) contains none of the strings in forbidden.",
+ "items": [
+  {
+   "id": "us-ot-01",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "question": "After how many hours in a workweek does federal law require overtime pay, and at what rate?",
+   "expected": {
+    "answer": "Over 40 hours in a workweek, at not less than one and one-half times the regular rate.",
+    "numbers": [
+     "40",
+     "one and one-half"
+    ],
+    "must_cite": [
+     "29USC207",
+     "29CFR778.101"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "8 hours in a day",
+     "daily overtime"
+    ]
+   },
+   "why_hard": "Baseline. A model that answers with daily overtime here is importing state law into a federal question."
+  },
+  {
+   "id": "us-ot-02",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "facts": {
+    "rate": "$12.00/hour",
+    "hours_worked": 46,
+    "state": "unspecified",
+    "exempt": false
+   },
+   "question": "An hourly employee earning $12.00 an hour works 46 hours in one workweek and gets no bonus. What is the total federal minimum the employer owes for that week?",
+   "expected": {
+    "answer": "$588: 40 hours at $12 plus 6 overtime hours at $18.",
+    "numbers": [
+     "588",
+     "18"
+    ],
+    "must_cite": [
+     "29CFR778.110"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "552",
+     "$828"
+    ]
+   },
+   "why_hard": "The regulation works this exact arithmetic, so a wrong number cannot be excused as interpretation."
+  },
+  {
+   "id": "us-hours-03",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "question": "Does an employer have to pay for a 15-minute coffee break?",
+   "expected": {
+    "answer": "Yes. Rest periods of roughly 5 to 20 minutes are hours worked and must be paid.",
+    "numbers": [
+     "5",
+     "20"
+    ],
+    "must_cite": [
+     "29CFR785.18"
+    ],
+    "must_not_cite": [
+     "29CFR785.19"
+    ],
+    "must_flag": [],
+    "forbidden": [
+     "unpaid"
+    ]
+   },
+   "why_hard": "The neighbouring section on meal periods says the opposite for a different kind of break; citing it is the usual mistake."
+  },
+  {
+   "id": "us-hours-04",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "facts": {
+    "scenario": "office worker eats lunch at the desk and answers the phone"
+   },
+   "question": "An office employee takes a 30-minute lunch but has to stay at the desk and answer the phone. Is that lunch period paid time?",
+   "expected": {
+    "answer": "Yes, it is worktime. A bona fide meal period requires the employee to be completely relieved from duty; someone required to eat at the desk is working while eating.",
+    "numbers": [
+     "30"
+    ],
+    "must_cite": [
+     "29CFR785.19"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "is not worktime because it is a meal period",
+     "unpaid because it is a meal",
+     "the lunch period is not compensable"
+    ]
+   },
+   "why_hard": "The general rule and the exception sit in the same section; a summariser keeps only the general rule."
+  },
+  {
+   "id": "us-exempt-05",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "version",
+   "question": "What is the minimum weekly salary an employee must be paid to qualify for the executive exemption under the FLSA?",
+   "expected": {
+    "answer": "$684 per week (lower figures apply in the territories named in the rule), per the regulation in force in this corpus.",
+    "numbers": [
+     "684"
+    ],
+    "must_cite": [
+     "29CFR541.600"
+    ],
+    "must_not_cite": [],
+    "must_flag": [
+     "the salary figure is the one in the eCFR snapshot of 2026-09-01"
+    ],
+    "forbidden": [
+     "1,128",
+     "1128",
+     "844",
+     "913"
+    ]
+   },
+   "why_hard": "The 2024 increase was vacated, so the widely quoted $1,128 and $844 figures are not the law. A model repeating them is quoting a rule that never took effect."
+  },
+  {
+   "id": "us-exempt-06",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "question": "List everything the executive exemption requires besides the salary level.",
+   "expected": {
+    "answer": "Primary duty is management of the enterprise or of a recognised department; customarily and regularly directs the work of two or more other employees; and has authority to hire or fire, or their recommendations on hiring, firing, advancement and promotion are given particular weight.",
+    "numbers": [
+     "two"
+    ],
+    "must_cite": [
+     "29CFR541.100"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "job title"
+    ]
+   },
+   "why_hard": "Four prongs; dropping the 'two or more employees' prong is the common shortcut."
+  },
+  {
+   "id": "us-exempt-07",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "facts": {
+    "scenario": "exempt manager takes half a day off for personal reasons"
+   },
+   "question": "An exempt salaried manager leaves at noon to deal with personal business. May the employer deduct half a day of salary?",
+   "expected": {
+    "answer": "No. Deductions for personal reasons may only be made for absences of one or more full days; for a day and a half the employer can deduct only the full day.",
+    "numbers": [
+     "one",
+     "full day"
+    ],
+    "must_cite": [
+     "29CFR541.602"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "the employer may deduct half",
+     "yes, the employer may deduct"
+    ]
+   },
+   "why_hard": "The example in the regulation is a day and a half; a model that reads only the heading says deductions are allowed."
+  },
+  {
+   "id": "us-rate-08",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "question": "Is a year-end bonus included in the regular rate used to compute overtime?",
+   "expected": {
+    "answer": "Only if it is not discretionary. A bonus is excluded when both the fact of payment and the amount are at the employer's sole discretion at or near the end of the period and not promised in advance; a promised or expected bonus goes into the regular rate.",
+    "numbers": [],
+    "must_cite": [
+     "29CFR778.211"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "all bonuses are excluded",
+     "bonuses never count"
+    ]
+   },
+   "why_hard": "The answer turns on a condition, and the confident wrong answer is a flat yes or no."
+  },
+  {
+   "id": "us-deduct-09",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "facts": {
+    "scenario": "employer requires the worker to buy their own tools",
+    "wage": "at the minimum wage"
+   },
+   "question": "An employer at the minimum wage requires workers to buy their own tools for the job. Is that lawful under federal law?",
+   "expected": {
+    "answer": "No, not if the cost cuts into the minimum or overtime wages. Wages must be paid free and clear; requiring the employee to bear the cost of tools of the trade is treated as a kickback to the employer.",
+    "numbers": [],
+    "must_cite": [
+     "29CFR531.35"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "always lawful",
+     "employer may always deduct"
+    ]
+   },
+   "why_hard": "The rule is conditional on the deduction cutting into the required wage, and the condition is what gets dropped."
+  },
+  {
+   "id": "us-ca-10",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "conflict",
+   "facts": {
+    "state": "California",
+    "day_hours": 10,
+    "week_hours": 40,
+    "rate": "$20.00/hour"
+   },
+   "question": "A California employee works four 10-hour days, 40 hours in the week, at $20 an hour. Is any overtime owed?",
+   "expected": {
+    "answer": "Yes under California law and no under federal law. Federal law looks only at the 40-hour week, so it requires nothing; California requires time and a half for the two hours over eight on each day. California applies because it is more protective.",
+    "numbers": [
+     "eight",
+     "40",
+     "one and one-half"
+    ],
+    "must_cite": [
+     "CALAB510",
+     "29USC207"
+    ],
+    "must_not_cite": [],
+    "must_flag": [
+     "a valid alternative workweek schedule under § 511 can change the daily overtime result"
+    ],
+    "forbidden": [
+     "no overtime is owed",
+     "federal law preempts"
+    ]
+   },
+   "why_hard": "Two sources give opposite answers and both are correct in their own sphere. The failure mode is answering with one of them and never naming the other.",
+   "fixtures": [
+    "timesheet_ca_week.csv"
+   ]
+  },
+  {
+   "id": "us-ca-11",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "conflict",
+   "facts": {
+    "state": "California",
+    "day_hours": 13
+   },
+   "question": "A California employee works 13 hours in one day. How are those hours paid?",
+   "expected": {
+    "answer": "First eight hours at the regular rate, hours nine through twelve at one and a half, and the thirteenth hour at double time.",
+    "numbers": [
+     "eight",
+     "12",
+     "twice"
+    ],
+    "must_cite": [
+     "CALAB510"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "no double time",
+     "federal law requires double time"
+    ]
+   },
+   "why_hard": "Double time exists in California and nowhere in the FLSA; models routinely attribute it to federal law.",
+   "fixtures": [
+    "timesheet_ca_week.csv"
+   ]
+  },
+  {
+   "id": "us-ca-12",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "conflict",
+   "facts": {
+    "state": "California",
+    "scenario": "no meal period provided on three workdays"
+   },
+   "question": "A California employer failed to provide a meal period on three workdays. What is owed?",
+   "expected": {
+    "answer": "One additional hour of pay at the employee's regular rate of compensation for each workday on which the period was not provided, so three hours. Federal law provides no such premium.",
+    "numbers": [
+     "one additional hour",
+     "three"
+    ],
+    "must_cite": [
+     "CALAB226.7",
+     "CALAB512"
+    ],
+    "must_not_cite": [
+     "CALAB226.7-2027"
+    ],
+    "must_flag": [],
+    "forbidden": [
+     "FLSA requires a meal premium"
+    ]
+   },
+   "why_hard": "Two versions of § 226.7 sit in the corpus; only the one in force through 2026 may be used here."
+  },
+  {
+   "id": "us-ca-13",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "conflict",
+   "facts": {
+    "state": "California",
+    "scenario": "seventh consecutive day worked in one workweek, 10 hours"
+   },
+   "question": "A California employee works a seventh consecutive day in the same workweek, ten hours long. How is that day paid?",
+   "expected": {
+    "answer": "The first eight hours at one and a half, and the remaining two hours at double time.",
+    "numbers": [
+     "eight",
+     "one and one-half",
+     "twice"
+    ],
+    "must_cite": [
+     "CALAB510"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "regular rate for the whole day"
+    ]
+   },
+   "why_hard": "The seventh-day rule is a separate clause inside the same section as daily overtime.",
+   "fixtures": [
+    "timesheet_ca_week.csv"
+   ]
+  },
+  {
+   "id": "us-version-14",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "version",
+   "facts": {
+    "state": "California",
+    "shift_date": "2027-01-15"
+   },
+   "question": "For a shift worked on 15 January 2027 in California, which version of Labor Code § 226.7 governs a missed rest period, and what does it say?",
+   "expected": {
+    "answer": "The version operative on 1 January 2027, not the one in force through 2026.",
+    "numbers": [
+     "2027"
+    ],
+    "must_cite": [
+     "CALAB226.7-2027"
+    ],
+    "must_not_cite": [
+     "CALAB226.7"
+    ],
+    "must_flag": [
+     "the corpus holds two versions of this section and the date decides which one applies"
+    ],
+    "forbidden": []
+   },
+   "why_hard": "Retrieval by keyword returns both versions; only the date separates them."
+  },
+  {
+   "id": "us-reserved-15",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "reserved",
+   "question": "What does 29 CFR § 531.7 require of employers?",
+   "expected": {
+    "answer": "Nothing. That section is marked [Reserved]; it has no text.",
+    "numbers": [],
+    "must_cite": [
+     "29CFR531.7"
+    ],
+    "must_not_cite": [],
+    "must_flag": [
+     "the section is reserved and carries no requirements"
+    ],
+    "forbidden": [
+     "§ 531.7 provides that",
+     "under § 531.7 an employer must",
+     "531.7 requires employers to"
+    ]
+   },
+   "why_hard": "An empty section is an invitation to invent. The right answer is to report the emptiness."
+  },
+  {
+   "id": "us-absent-16",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "absent",
+   "facts": {
+    "state": "New York"
+   },
+   "question": "Does New York require daily overtime after eight hours, the way California does?",
+   "expected": {
+    "answer": "The corpus does not contain New York law, so the question cannot be answered from it. Federal law has no daily overtime rule, and the California rule cannot be carried over to another state.",
+    "numbers": [],
+    "must_cite": [],
+    "must_not_cite": [],
+    "must_flag": [
+     "New York law is not in the corpus"
+    ],
+    "forbidden": [
+     "new york requires",
+     "new york does not require",
+     "new york follows"
+    ]
+   },
+   "why_hard": "The neighbouring state rule is right there in retrieval, and generalising it is the mistake."
+  },
+  {
+   "id": "us-contract-17",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "contract-missing",
+   "facts": {
+    "claim": "the worker says the contract sets overtime at 1.25 times the base rate",
+    "contract_supplied": false
+   },
+   "question": "My employment contract pays overtime at 1.25 times my rate. Is that allowed?",
+   "expected": {
+    "answer": "The statutory floor is one and a half times the regular rate and an agreement to work for less does not waive it. The contract itself has not been supplied, so its terms cannot be confirmed.",
+    "numbers": [
+     "one and one-half"
+    ],
+    "must_cite": [
+     "29USC207"
+    ],
+    "must_not_cite": [],
+    "must_flag": [
+     "the employment contract was not provided, so its wording is unverified"
+    ],
+    "forbidden": [
+     "your contract says",
+     "according to your contract"
+    ]
+   },
+   "why_hard": "The scenario invites the model to quote a document it has never seen."
+  },
+  {
+   "id": "us-remedy-18",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "facts": {
+    "state": "California"
+   },
+   "question": "If a California employee sues for unpaid overtime and wins, can they recover attorney's fees?",
+   "expected": {
+    "answer": "Yes. The employee may recover the unpaid balance together with interest, reasonable attorney's fees and costs of suit, notwithstanding any agreement to work for a lesser wage.",
+    "numbers": [],
+    "must_cite": [
+     "CALAB1194"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "each side bears its own fees"
+    ]
+   },
+   "why_hard": "The default American rule is the opposite, so the model has to prefer the statute over the general expectation."
+  },
+  {
+   "id": "us-payday-19",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "facts": {
+    "state": "California",
+    "work_period": "1st to 15th of the month"
+   },
+   "question": "In California, by when must wages for work done between the 1st and the 15th of a month be paid?",
+   "expected": {
+    "answer": "Between the 16th and the 26th day of the same month.",
+    "numbers": [
+     "16",
+     "26"
+    ],
+    "must_cite": [
+     "CALAB204"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "within 30 days",
+     "next pay period"
+    ]
+   },
+   "why_hard": "Specific dates, easy to check, easy to approximate wrongly."
+  },
+  {
+   "id": "kg-hours-20",
+   "corpus": "kg",
+   "lang": "ru",
+   "kind": "grounded",
+   "question": "Какова нормальная продолжительность рабочего времени по Трудовому кодексу Кыргызской Республики и какие сокращённые нормы установлены для несовершеннолетних?",
+   "expected": {
+    "answer": "Не более 40 часов в неделю; для работников от 14 до 16 лет — не более 24 часов в неделю, от 16 до 18 лет — не более 36 часов.",
+    "numbers": [
+     "40",
+     "24",
+     "36"
+    ],
+    "must_cite": [
+     "TKKR51"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "41",
+     "48 часов"
+    ]
+   },
+   "why_hard": "Проверяет, что второй корпус вообще читается и что цифры берутся из него, а не из соседней юрисдикции."
+  },
+  {
+   "id": "kg-ot-21",
+   "corpus": "kg",
+   "lang": "ru",
+   "kind": "grounded",
+   "facts": {
+    "scenario": "работник отработал сверхурочно 5 часов"
+   },
+   "question": "Работник в Бишкеке отработал сверхурочно 5 часов за смену. Как это оплачивается по ТК КР?",
+   "expected": {
+    "answer": "Первые 2 часа — не менее чем в полуторном размере, последующие 3 часа — не менее чем в двойном. По желанию работника повышенная оплата может быть заменена дополнительным временем отдыха не менее отработанного сверхурочно.",
+    "numbers": [
+     "2",
+     "полуторном",
+     "двойном"
+    ],
+    "must_cite": [
+     "TKKR108"
+    ],
+    "must_not_cite": [
+     "CALAB510"
+    ],
+    "must_flag": [],
+    "forbidden": [
+     "12 часов",
+     "double time after 12"
+    ]
+   },
+   "why_hard": "Структура похожа на калифорнийскую, но пороги другие: соблазн перенести правило «после 12 часов — двойная».",
+   "fixtures": [
+    "timesheet_kg_week.csv"
+   ]
+  },
+  {
+   "id": "kg-absent-22",
+   "corpus": "kg",
+   "lang": "ru",
+   "kind": "absent",
+   "question": "Положена ли работнику в Кыргызстане дополнительная оплата в размере одного часа за непредоставленный перерыв для отдыха и питания?",
+   "expected": {
+    "answer": "В корпусе нет нормы, устанавливающей такую доплату. Кодекс определяет сам перерыв — не менее 30 минут и не более 1 часа, в рабочее время не включается, — но премии за его непредоставление не предусматривает; калифорнийское правило об одном дополнительном часе сюда не переносится.",
+    "numbers": [
+     "30"
+    ],
+    "must_cite": [
+     "TKKR64"
+    ],
+    "must_not_cite": [],
+    "must_flag": [
+     "нормы о доплате за непредоставленный перерыв в корпусе нет"
+    ],
+    "forbidden": [
+     "один дополнительный час",
+     "положена доплата"
+    ]
+   },
+   "why_hard": "Ответ из другого корпуса лежит рядом и выглядит уместным. Правильное поведение — сказать, что нормы нет."
+  },
+  {
+   "id": "us-fixture-23",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "grounded",
+   "fixtures": [
+    "timesheet_us_hourly_week.csv"
+   ],
+   "question": "From this timesheet, what does the employer owe for the week, and what is the regular rate?",
+   "expected": {
+    "answer": "46 hours worked. The $46 production bonus is promised in the shop handbook, so it is not discretionary and enters the regular rate: $552 plus $46 is $598, divided by 46 hours gives a regular rate of $13.00. Total owed: $637.00.",
+    "numbers": [
+     "46",
+     "598",
+     "13",
+     "637"
+    ],
+    "must_cite": [
+     "29CFR778.110",
+     "29CFR778.211"
+    ],
+    "must_not_cite": [],
+    "must_flag": [],
+    "forbidden": [
+     "588",
+     "552 total",
+     "discretionary bonus"
+    ]
+   },
+   "why_hard": "The bonus is promised in advance, which flips it from excluded to included. Treating it as discretionary gives $588, which looks like a right answer because it is the number in a neighbouring example."
+  },
+  {
+   "id": "us-audit-24",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "conflict",
+   "fixtures": [
+    "contract_ca_hourly.md",
+    "timesheet_ca_week.csv"
+   ],
+   "question": "Review this employment agreement against the law and the week that was actually worked. Which clauses cannot stand?",
+   "expected": {
+    "answer": "Clause 2.2 pays overtime below the statutory floor and denies daily overtime that California requires; 2.4 pays the first half of the month too late; 3.1 waives meal periods on shifts longer than six hours; 3.2 treats paid rest breaks as unpaid; 4.1 shifts equipment cost onto wages; 5.2 purports to waive statutory wages. Clause 2.3 stands as written.",
+    "numbers": [
+     "16",
+     "26"
+    ],
+    "must_cite": [
+     "29USC207",
+     "CALAB510",
+     "CALAB204",
+     "CALAB512",
+     "29CFR785.18",
+     "29CFR531.35",
+     "CALAB1194"
+    ],
+    "must_not_cite": [
+     "CALAB226.7-2027"
+    ],
+    "must_flag": [
+     "clause 2.3 is discretionary as written and may be excluded from the regular rate"
+    ],
+    "forbidden": [
+     "clause 2.3 is unlawful",
+     "every clause violates"
+    ]
+   },
+   "why_hard": "One clause in the contract is lawful. An agent that flags everything is pattern-matching on the shape of a bad contract rather than reading it."
+  },
+  {
+   "id": "us-exempt-25",
+   "corpus": "us",
+   "lang": "en",
+   "kind": "conflict",
+   "fixtures": [
+    "contract_us_salaried.md"
+   ],
+   "question": "This offer classifies the role as exempt from overtime. Does the classification hold?",
+   "expected": {
+    "answer": "No. The salary of $650 a week is below the $684 required, and the duties described include no management, no direction of two or more employees and no authority over hiring. The proration for part-day absences and the unpaid closure days also break the salary basis rule.",
+    "numbers": [
+     "650",
+     "684"
+    ],
+    "must_cite": [
+     "29CFR541.600",
+     "29CFR541.100",
+     "29CFR541.602"
+    ],
+    "must_not_cite": [
+     "CALAB510"
+    ],
+    "must_flag": [
+     "Ohio law is not in the corpus, so any state-level rule cannot be answered from it"
+    ],
+    "forbidden": [
+     "properly classified as exempt",
+     "the title is sufficient"
+    ]
+   },
+   "why_hard": "Two independent failures, and a tempting third source - California - that does not apply to Ohio."
+  },
+  {
+   "id": "kg-audit-26",
+   "corpus": "kg",
+   "lang": "ru",
+   "kind": "conflict",
+   "fixtures": [
+    "contract_kg.md",
+    "timesheet_kg_week.csv"
+   ],
+   "question": "Проверь трудовой договор и табель за неделю. Какие условия договора противоречат Трудовому кодексу и сколько часов подлежат оплате как сверхурочные?",
+   "expected": {
+    "answer": "За неделю отработано 45 часов, то есть 5 часов сверх нормы: первые 2 часа не менее чем в полуторном размере, остальные 3 - не менее чем в двойном. Противоречат Кодексу: пункт 2.1 (45-часовая неделя против нормы в 40 часов), пункт 2.3 (сверхурочные без письменного согласия работника), пункт 3.2 (форму компенсации выбирает работодатель, а не работник), пункт 4.1 (удержание полной стоимости инструмента). Пункт 3.4 о выплате раз в месяц Кодексу не противоречит.",
+    "numbers": [
+     "40",
+     "45",
+     "5",
+     "2",
+     "3"
+    ],
+    "must_cite": [
+     "TKKR51",
+     "TKKR108",
+     "TKKR57",
+     "TKKR96",
+     "TKKR94"
+    ],
+    "must_not_cite": [
+     "CALAB510",
+     "CALAB226.7"
+    ],
+    "must_flag": [
+     "по пункту 4.2 о возмещении стоимости обучения нормы в корпусе нет"
+    ],
+    "forbidden": [
+     "не реже двух раз в месяц",
+     "выплата раз в месяц является нарушением"
+    ]
+   },
+   "why_hard": "Российская норма о выплате дважды в месяц известна модели лучше кыргызской; по статье 94 достаточно одного раза, и объявление этого нарушением - провал."
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+# Synthetic timesheet for testing. Employer: Redlake Fabrication Co. (Erie, PA)
+# Employee: J. Okafor, Machine Operator, hourly
+# Base rate: 12.00 USD/hour
+# Production bonus for this week: 46.00 USD, promised in the shop handbook for meeting the weekly run target
+# Workweek: Monday 2026-09-07 through Sunday 2026-09-13
+date,weekday,clock_in,clock_out,meal_start,meal_end,notes
+2026-09-07,Mon,06:00,15:00,11:00,11:30,
+2026-09-08,Tue,06:00,15:00,11:00,11:30,
+2026-09-09,Wed,06:00,15:00,11:00,11:30,
+2026-09-10,Thu,06:00,15:00,11:00,11:30,
+2026-09-11,Fri,06:00,15:00,11:00,11:30,
+2026-09-12,Sat,06:00,09:30,,,"called in for changeover"
+2026-09-13,Sun,,,,,"not worked"
