@@ -50,9 +50,35 @@ def rendered(answer):
     return " ".join(parts)
 
 
+CITE_PATTERNS = {
+    "29CFR": lambda n: re.compile(re.escape(n) + r"\b"),
+    "29USC": lambda n: re.compile(r"(?:u\.?s\.?c\.?|section|§)\s*\.?\s*" + n + r"\b", re.I),
+    "CALAB": lambda n: re.compile(r"(?:code|§|section)\s*" + re.escape(n.split("-")[0]) + r"\b", re.I),
+    "TKKR": lambda n: re.compile(r"(?:стать[а-я]+|ст\.)\s*" + n + r"\b", re.I),
+}
+
+
+def cited_anywhere(answer):
+    """Claims cite by id; a gap cites in prose, and a gap that names the provision has cited it.
+
+    The pre-build baseline was graded by reading citations out of the whole answer, so grading
+    this one only by the claim ids would compare two different things.
+    """
+    cited = {c["unit"] for c in answer["claims"]}
+    prose = " ".join(f"{g.get('missing', '')} {g.get('why', '')}" for g in answer["gaps"])
+    for prefix, build in CITE_PATTERNS.items():
+        for match in re.finditer(r"\b(?:29\s*CFR|29\s*U\.?S\.?C\.?|Labor Code|стать[а-я]+|ст\.)"
+                                 r"\s*§?\s*([\d.]+)", prose, re.I):
+            number = match.group(1).rstrip(".")
+            candidate = prefix + number
+            if build(number).search(prose):
+                cited.add(candidate)
+    return cited
+
+
 def grade(item, answer):
     expected = item["expected"]
-    cited = {c["unit"] for c in answer["claims"]}
+    cited = cited_anywhere(answer)
     text = rendered(answer)
     flat = re.sub(r"\s+", " ", text).lower().replace(",", "")
     # a quotation the model altered is caught by verify.quote_matches and shown as paraphrase,

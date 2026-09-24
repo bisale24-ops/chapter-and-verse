@@ -47,8 +47,15 @@ def check(claim, unit, model_name=model.DEFAULT_MODEL):
     reply = model.call(VERIFIER_SYSTEM, user, model=model_name, max_tokens=200)
     parsed = model.as_json(reply["text"]) or {}
     verdict = parsed.get("verdict")
-    result["verdict"] = verdict if verdict in ("supported", "unsupported", "not_in_source") else "unsupported"
-    result["reason"] = parsed.get("reason") or reply.get("error") or "verifier returned nothing usable"
+    if verdict not in ("supported", "unsupported", "not_in_source"):
+        # a check that failed is not a claim that failed; ask once more before holding it against
+        # the claim, and if the second attempt is no better, say plainly that the check is what broke
+        reply = model.call(VERIFIER_SYSTEM, user, model=model_name, max_tokens=200)
+        parsed = model.as_json(reply["text"]) or {}
+        verdict = parsed.get("verdict")
+    result["verdict"] = verdict if verdict in ("supported", "unsupported", "not_in_source") else "check_failed"
+    result["reason"] = (parsed.get("reason") or reply.get("error")
+                        or "the check itself failed, so the claim is neither confirmed nor refuted")
     result["served"] = reply.get("served")
     result["substituted"] = reply.get("substituted", False)
     return result
