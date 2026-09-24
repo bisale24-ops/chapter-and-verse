@@ -24,7 +24,24 @@ def key():
             or (KEY_FILE.read_text().strip() if KEY_FILE.exists() else "")).strip()
 
 
-def call(system, user, model=DEFAULT_MODEL, max_tokens=1200, tries=4):
+def call(system, user, model=DEFAULT_MODEL, max_tokens=1200, tries=4, insist=3):
+    """One call, retried when the gateway answers with a different model than the one asked for.
+
+    `insist` is how many times to ask again before giving up and returning the substituted answer
+    marked as such. The substitutions arrive in bursts, so asking again usually lands back on the
+    model that was requested; when it does not, the answer carries the warning to the reader.
+    """
+    for attempt in range(max(1, insist)):
+        result = _once(system, user, model, max_tokens, tries)
+        if not result.get("substituted"):
+            result["substitution_retries"] = attempt
+            return result
+        time.sleep(1 + attempt)
+    result["substitution_retries"] = insist
+    return result
+
+
+def _once(system, user, model, max_tokens, tries):
     body = {"model": model, "temperature": 0, "max_tokens": max_tokens,
             "messages": [{"role": "system", "content": system},
                          {"role": "user", "content": user}]}
@@ -39,6 +56,7 @@ def call(system, user, model=DEFAULT_MODEL, max_tokens=1200, tries=4):
                 payload = json.loads(response.read())
                 choice = (payload.get("choices") or [{}])[0]
                 return {"text": (choice.get("message") or {}).get("content") or "",
+                        "finish_reason": choice.get("finish_reason"),
                         "served": payload.get("model"),
                         "asked": model,
                         "substituted": bool(payload.get("model")) and payload["model"] != model,

@@ -1,0 +1,24 @@
+[33mwarning: asked swiss-ai/apertus-v1.5-70b, the gateway served aisingapore/Qwen-SEA-LION-v4-32B-IT[0m
+
+[32m1.[0m The contract allows for overtime at 1.25 times the base rate.
+   [90mcontract_ca_hourly.md — supplied document [supplied document][0m
+   [90m“Overtime is paid at 1.25 times the base rate for hours worked in excess of forty in a workweek.”[0m
+[32m2.[0m Federal law requires overtime to be paid at not less than 1.5 times the regular rate.
+   [90m29 CFR § 778.107 — General standard for overtime pay. [United States, federal][0m
+   [90m“The general overtime pay standard in section 7(a) requires that overtime must be compensated at a rate not less than one and one-half times the regular rate at which the employee is actually employed.”[0m
+[32m3.[0m Federal law allows for overtime rates higher than 1.5 times the regular rate.
+   [90m29 CFR § 778.308 — The overtime rate is an hourly rate. [United States, federal][0m
+   [90m“To qualify under section 7(e)(5), the overtime rate must be greater than the regular rate, either a fixed amount per hour or a multiple of the nonovertime rate, such as one and one-third, one and one-half or two times that rate.”[0m
+[32m4.[0m Federal law permits contracts to provide for higher overtime rates than the statutory minimum.
+   [90m29 CFR § 541.4 — Other laws and collective bargaining agreements. [United States, federal][0m
+   [90m“employers, on their own initiative or under a collective bargaining agreement with a labor union, are not precluded by the Act from providing a wage higher than the statutory minimum, a shorter workweek than the statutory maximum, or a higher overtime premium (double time, for example) than provided by the Act.”[0m
+[32m5.[0m California law allows employees to recover unpaid overtime compensation in a civil action.
+   [90mCal. Labor Code § 1194 — Action to recover unpaid minimum or overtime wage [California][0m
+   [33mnot a verbatim quote, shown as the model wrote it:[0m [90many employee receiving less than the legal minimum wage or the legal overtime compensation applicable to the employee is entitled to recover in a civil action the unpaid balance of the full amount of this minimum wage or overtime compensation.[0m
+
+[33mNot verified[0m
+ - Whether California state law provides for a higher overtime rate than the federal minimum.
+   [90mNo source provided specifies California's overtime rate or confirms it is higher than the federal minimum.[0m
+
+[90m16 provisions read, 5 verification calls, model aisingapore/Qwen-SEA-LION-v4-32B-IT[0m
+[90mThis shows provisions and arithmetic. It is not legal advice.[0m

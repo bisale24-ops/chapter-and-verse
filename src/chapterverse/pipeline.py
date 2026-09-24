@@ -32,7 +32,9 @@ DRAFT_SYSTEM = {
         "the question but not supplied, that is a gap. Where two jurisdictions both apply, make a "
         "claim for each and a claim for the rule that decides between them. If the question "
         "covers several clauses, matters or days, produce a claim or a gap for every one of them, "
-        "not only the clearest."
+        "not only the clearest. Figures computed from a timesheet are already established and are "
+        "not yours to restate: a claim says what the provision requires, never what the total "
+        "comes to, because a provision never contains the total."
     ),
     "ru": (
         "Вы отвечаете на вопросы об оплате и рабочем времени, используя только выданные источники.\n"
@@ -45,7 +47,9 @@ DRAFT_SYSTEM = {
         "буквально или оставляйте пустой. Если источники не решают часть вопроса, эта часть "
         "идёт в gaps, а не в ответ. Если в вопросе упомянут документ, которого нет среди "
         "выданных, это тоже gap. Если вопрос охватывает несколько пунктов, вопросов или дней, "
-        "по каждому должно быть либо утверждение, либо gap, а не только по самому очевидному."
+        "по каждому должно быть либо утверждение, либо gap, а не только по самому очевидному. "
+        "Числа, посчитанные по табелю, уже установлены: утверждение говорит, чего требует норма, "
+        "и не повторяет итоговую сумму, потому что в норме её нет."
     ),
 }
 
@@ -150,8 +154,16 @@ def ask(question, jurisdictions=("us-federal", "us-ca"), on_date=None, documents
     parts.append("\nSources (cite by id):\n" + "\n\n".join(blocks))
     preamble = "\n".join(parts)
 
-    draft = model.call(DRAFT_SYSTEM[language], preamble, model=model_name)
+    # Russian costs two to three times the tokens of the same English, and a JSON object cut
+    # off mid-string is no JSON at all, so the budget is larger for it
+    budget = 2400 if language == "ru" else 1600
+    draft = model.call(DRAFT_SYSTEM[language], preamble, model=model_name, max_tokens=budget)
     parsed = model.as_json(draft["text"])
+    if not parsed and draft.get("text"):
+        repair = model.call(
+            "You repair malformed JSON. Return the same content as valid JSON and nothing else.",
+            draft["text"], model=model_name, max_tokens=budget)
+        parsed = model.as_json(repair["text"])
     trace = {"asked_model": model_name, "served_model": draft.get("served"),
              "search_phrases": planned,
              "substituted": draft.get("substituted", False), "retrieved": [u["id"] for u in found],

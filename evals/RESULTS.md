@@ -29,7 +29,7 @@ gap reported in all four questions where that is the only honest answer.
 ## What the numbers mean
 
 **The tool never shows a quotation that is not in the source.** Not because the model stopped
-altering them — it altered six — but because `verify.quote_matches` checks every quoted span in
+altering them — it altered two — but because `verify.quote_matches` checks every quoted span in
 code and strips the quotation marks when it does not match. The bare model, given the same
 sources, showed three altered quotations as quotations.
 
@@ -84,5 +84,7 @@ python3 evals/run_evals.py               # the full pipeline, graded, about 8 mi
 ```
 
 Every answer records which model actually served it. In 364 calls logged on 24 September, 11
-came back from `aisingapore/Qwen-SEA-LION-v4-32B-IT` although Apertus 70B was requested; one
-such substitution landed inside this eval run and is marked in the results file.
+came back from `aisingapore/Qwen-SEA-LION-v4-32B-IT` although Apertus 70B was requested. Four
+landed inside this eval run and are marked in the results file; a later run of five questions had
+three substitutions in a row, so they arrive in bursts rather than at random. Short prompts sent
+during the same hour were all served by Apertus, so prompt size is not the trigger.
